@@ -928,7 +928,7 @@ function showDetail(id) {
     ${v.otherNote?`<div class="alert alert-gold" style="font-size:12px;margin-bottom:8px"><b>ملاحظات:</b> ${v.otherNote}</div>`:''}
     ${v.photos&&v.photos.length?`<div class="photos-row" style="margin-bottom:12px">${v.photos.map(p=>`<div class="photo-thumb"><img src="${p}" onclick="window.open('${p}','_blank')"></div>`).join('')}</div>`:''}
     <div class="divider"></div>
-    ${canDelete?`<button class="btn btn-danger" style="margin-bottom:8px" onclick="deleteVisit('${v.id}',this.closest('.modal-overlay'))">🗑️ حذف الزيارة</button>`:''}
+    ${canDelete?`<button class="btn btn-danger" style="margin-bottom:8px" onclick="deleteVisit('${v.id}',this.closest('.modal-overlay'))">🗑️ 🖨️ طباعة النموذج الرسمي</button>${canD?`<button class="btn btn-danger" style="margin-bottom:8px" onclick="deleteVisit('${v.id}',this.closest('.modal-overlay'))">🗑️ حذف الزيارة</button>`:''}
     <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">إغلاق</button>
   </div>`;
   m.addEventListener('click', e => { if(e.target===m) m.remove(); });
