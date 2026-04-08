@@ -4,401 +4,1101 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#0F6E56">
 <title>نموذج رصد مساكن الحجاج</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--green:#0F6E56;--green-light:#E1F5EE;--green-mid:#1D9E75;--gold:#BA7517;--gold-light:#FAEEDA;--gold-mid:#EF9F27;--red:#A32D2D;--red-light:#FCEBEB;--red-mid:#E24B4A;--blue:#185FA5;--blue-light:#E6F1FB;--gray:#444441;--gray-light:#F1EFE8;--gray-mid:#888780;--border:#e0ddd6;--font:'Cairo',sans-serif;--radius:12px;--radius-sm:8px;--shadow:0 2px 12px rgba(0,0,0,0.08)}
+:root{
+  --green:#0F6E56;--green-light:#E1F5EE;--green-mid:#1D9E75;
+  --gold:#BA7517;--gold-light:#FAEEDA;--gold-mid:#EF9F27;
+  --red:#A32D2D;--red-light:#FCEBEB;--red-mid:#E24B4A;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --gray:#444441;--gray-light:#F1EFE8;--gray-mid:#888780;
+  --white:#fff;--border:#e0ddd6;
+  --font:'Cairo',sans-serif;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+}
 body{font-family:var(--font);background:#f5f3ee;min-height:100vh;font-size:14px;color:#2c2c2a;overflow-x:hidden}
+
+/* LOADER */
 #appLoader{position:fixed;inset:0;background:var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;color:#fff}
-#appLoader .logo{font-size:52px;margin-bottom:16px}
-#appLoader h2{font-size:19px;font-weight:700;margin-bottom:6px}
-#appLoader p{font-size:13px;opacity:.8;margin-bottom:20px}
-.spinner{width:38px;height:38px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+#appLoader .logo{font-size:48px;margin-bottom:16px}
+#appLoader h2{font-size:18px;font-weight:700;margin-bottom:8px}
+#appLoader p{font-size:13px;opacity:.8}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-top:20px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOPBAR */
 .topbar{background:var(--green);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .topbar h1{font-size:14px;font-weight:700;line-height:1.3}
-.topbar small{font-size:10px;opacity:.8;display:block}
-.icon-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:20px;padding:6px 14px;font-family:var(--font);font-size:12px;cursor:pointer;font-weight:600}
-.sync-dot{width:9px;height:9px;border-radius:50%;background:#4ade80;display:inline-block;margin-left:6px;vertical-align:middle}
-.sync-dot.offline{background:#f87171}
-.sync-dot.syncing{background:var(--gold-mid);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.login-wrap{min-height:100vh;background:linear-gradient(160deg,#073d2e 0%,var(--green) 60%,#1a8a65 100%);display:flex;align-items:center;justify-content:center;padding:24px}
-.login-card{background:#fff;border-radius:24px;padding:36px 24px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.topbar small{font-size:11px;opacity:.8}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:20px;padding:5px 12px;font-family:var(--font);font-size:12px;cursor:pointer}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;background:linear-gradient(160deg,#0a4d3a 0%,var(--green) 50%,#1a8a65 100%);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border-radius:20px;padding:32px 24px;width:100%;max-width:380px;box-shadow:0 16px 48px rgba(0,0,0,.25)}
 .login-logo{text-align:center;margin-bottom:28px}
-.login-logo .icon{width:76px;height:76px;background:var(--green-light);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:34px}
+.login-logo .icon{width:72px;height:72px;background:var(--green-light);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:32px;box-shadow:0 4px 16px rgba(15,110,86,.2)}
 .login-logo h2{font-size:20px;font-weight:900;color:var(--green)}
 .login-logo p{font-size:12px;color:var(--gray-mid);margin-top:4px}
+
+/* FORMS */
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray);margin-bottom:6px}
 .form-group input,.form-group select,.form-group textarea{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;font-family:var(--font);font-size:14px;color:#2c2c2a;background:#fff;outline:none;transition:border-color .2s;-webkit-appearance:none}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,110,86,.1)}
 .form-group textarea{resize:vertical;min-height:80px}
+
+/* BUTTONS */
 .btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-primary{background:var(--green);color:#fff}
 .btn-primary:active{background:#0a4d3a;transform:scale(.98)}
-.btn-primary:disabled{background:var(--gray-mid);cursor:not-allowed;transform:none}
+.btn-primary:disabled{background:var(--gray-mid);cursor:not-allowed}
 .btn-secondary{background:var(--gray-light);color:var(--gray);border:1.5px solid var(--border)}
 .btn-danger{background:var(--red-light);color:var(--red);border:1.5px solid #f7c1c1}
+.btn-sm{width:auto;padding:7px 14px;font-size:13px}
+
+/* SCREENS */
 .screen{display:none;min-height:calc(100vh - 56px);padding-bottom:80px}
 .screen.active{display:block}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.07)}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,.06)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 2px 10px;cursor:pointer;color:var(--gray-mid);font-size:9px;gap:3px;transition:color .2s;border:none;background:none;font-family:var(--font)}
-.nav-item svg{width:22px;height:22px}
+.nav-item svg{width:22px;height:22px;flex-shrink:0}
 .nav-item.active{color:var(--green)}
+
+/* CONTENT */
 .content{padding:14px 14px 0}
+
+/* CARDS */
 .card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
-.card-header{font-size:15px;font-weight:700;color:var(--green);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--gray-light)}
+.card-header{font-size:15px;font-weight:700;color:var(--green);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--gray-light);display:flex;align-items:center;gap:8px}
+
+/* STATS */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .stat-card{background:#fff;border-radius:var(--radius);padding:14px 10px;box-shadow:var(--shadow);text-align:center}
 .stat-val{font-size:26px;font-weight:900;line-height:1.1}
 .stat-label{font-size:10px;color:var(--gray-mid);margin-top:3px}
-.stat-card.green .stat-val{color:var(--green)}.stat-card.gold .stat-val{color:var(--gold)}.stat-card.red .stat-val{color:var(--red)}.stat-card.blue .stat-val{color:var(--blue)}
-.section-title{background:var(--green);color:#fff;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;margin:14px 0 8px}
-.item-row{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#fff;border-radius:var(--radius-sm);margin-bottom:6px;border:1.5px solid var(--border);transition:border-color .2s,background .2s}
-.item-row.answered-yes{border-color:var(--green-mid);background:rgba(29,158,117,.05)}
-.item-row.answered-no{border-color:var(--red-mid);background:rgba(226,75,74,.05)}
-.item-num{min-width:26px;height:26px;background:var(--green-light);color:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
-.item-text{flex:1;font-size:12.5px;line-height:1.5}
-.yes-no{display:flex;gap:5px;flex-shrink:0;margin-top:2px}
+.stat-card.green .stat-val{color:var(--green)}
+.stat-card.gold .stat-val{color:var(--gold)}
+.stat-card.red .stat-val{color:var(--red)}
+.stat-card.blue .stat-val{color:var(--blue)}
+
+/* CHECKLIST */
+.section-title{background:var(--green);color:#fff;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.item-row{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#fff;border-radius:var(--radius-sm);margin-bottom:6px;border:1.5px solid var(--border);transition:border-color .2s}
+.item-row.answered-yes{border-color:var(--green-mid);background:rgba(29,158,117,.04)}
+.item-row.answered-no{border-color:var(--red-mid);background:rgba(226,75,74,.04)}
+.item-num{min-width:26px;height:26px;background:var(--green-light);color:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.item-text{flex:1;font-size:12.5px;line-height:1.5;color:#2c2c2a}
+.yes-no{display:flex;gap:5px;flex-shrink:0;margin-top:1px}
 .yn-btn{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--gray-mid);transition:all .15s}
 .yn-btn.yes.sel{background:var(--green);color:#fff;border-color:var(--green)}
 .yn-btn.no.sel{background:var(--red-mid);color:#fff;border-color:var(--red-mid)}
+
+/* PROGRESS */
 .prog-wrap{margin-bottom:10px}
 .prog-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.prog-label span:first-child{color:var(--gray);max-width:75%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prog-bar{height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;border-radius:4px;transition:width .5s}
-.prog-fill.green{background:var(--green-mid)}.prog-fill.red{background:var(--red-mid)}.prog-fill.gold{background:var(--gold-mid)}
+.prog-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.prog-fill.green{background:var(--green-mid)}
+.prog-fill.red{background:var(--red-mid)}
+.prog-fill.gold{background:var(--gold-mid)}
+
+/* VISIT CARDS */
 .visit-item{background:#fff;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);margin-bottom:10px;border-right:4px solid var(--green);cursor:pointer;transition:transform .15s}
 .visit-item:active{transform:scale(.98)}
-.visit-item.bad{border-right-color:var(--red-mid)}.visit-item.mid{border-right-color:var(--gold-mid)}
-.visit-name{font-size:14px;font-weight:700}.visit-meta{font-size:11px;color:var(--gray-mid);margin-top:2px}.visit-score{font-size:22px;font-weight:900}
-.s-good{color:var(--green)}.s-mid{color:var(--gold)}.s-bad{color:var(--red)}
+.visit-item.bad{border-right-color:var(--red-mid)}
+.visit-item.mid{border-right-color:var(--gold-mid)}
+.visit-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.visit-name{font-size:14px;font-weight:700}
+.visit-meta{font-size:11px;color:var(--gray-mid);margin-top:2px}
+.visit-score{font-size:22px;font-weight:900}
+.score-good{color:var(--green)}
+.score-mid{color:var(--gold)}
+.score-bad{color:var(--red)}
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-green{background:var(--green-light);color:var(--green)}.badge-red{background:var(--red-light);color:var(--red)}.badge-gold{background:var(--gold-light);color:var(--gold)}
-.photo-area{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:22px;text-align:center;cursor:pointer;background:var(--gray-light)}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-gold{background:var(--gold-light);color:var(--gold)}
+
+/* PHOTOS */
+.photo-area{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;background:var(--gray-light);transition:border-color .2s}
+.photo-area:active{border-color:var(--green)}
 .photos-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .photo-thumb{position:relative;width:72px;height:72px}
-.photo-thumb img{width:72px;height:72px;border-radius:8px;object-fit:cover;border:1px solid var(--border)}
+.photo-thumb img{width:72px;height:72px;border-radius:var(--radius-sm);object-fit:cover;border:1px solid var(--border)}
 .photo-del{position:absolute;top:2px;left:2px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:none;align-items:flex-end;justify-content:center}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 36px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto}
 .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:17px;font-weight:900;color:var(--green);margin-bottom:4px}
+
+/* TABS */
 .tabs{display:flex;gap:4px;background:var(--gray-light);padding:4px;border-radius:var(--radius-sm);margin-bottom:14px}
 .tab{flex:1;text-align:center;padding:8px 4px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-mid);transition:all .2s;border:none;background:none;font-family:var(--font)}
 .tab.active{background:#fff;color:var(--green);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+
+/* ALERTS */
 .alert{padding:11px 14px;border-radius:var(--radius-sm);margin-bottom:12px;font-size:13px;font-weight:600}
-.alert-green{background:var(--green-light);color:var(--green)}.alert-red{background:var(--red-light);color:var(--red)}.alert-gold{background:var(--gold-light);color:var(--gold)}
+.alert-green{background:var(--green-light);color:var(--green)}
+.alert-red{background:var(--red-light);color:var(--red)}
+.alert-gold{background:var(--gold-light);color:var(--gold)}
+
+/* USER ROWS */
 .user-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--gray-light);border-radius:var(--radius-sm);margin-bottom:8px}
 .user-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+
+/* UTILS */
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .divider{height:1px;background:var(--border);margin:14px 0}
-.empty-state{text-align:center;padding:32px 20px;color:var(--gray-mid);font-size:13px}
-.empty-state .icon{font-size:38px;margin-bottom:10px}
+.text-center{text-align:center}
+.text-muted{color:var(--gray-mid)}
 .fw700{font-weight:700}
+.empty-state{text-align:center;padding:36px 20px;color:var(--gray-mid);font-size:13px}
+.empty-state .icon{font-size:40px;margin-bottom:10px}
+
+/* SYNC INDICATOR */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;margin-left:4px}
+.sync-dot.offline{background:#f87171}
+.sync-dot.syncing{background:var(--gold-mid);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* CHART BARS */
 .chart-bar-wrap{margin-bottom:8px}
 .chart-bar-label{font-size:11px;color:var(--gray);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chart-bar{height:22px;background:var(--gray-light);border-radius:4px;overflow:hidden}
 .chart-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px;min-width:36px}
 .chart-bar-val{font-size:11px;font-weight:700;color:#fff}
-select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:#fff;-webkit-appearance:none;outline:none}
-select:focus{border-color:var(--green)}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 </style>
 </head>
 <body>
-<div id="appLoader"><div class="logo">🕌</div><h2>إدارة مساكن الحجاج</h2><p>جاري الاتصال بقاعدة البيانات...</p><div class="spinner"></div></div>
-<div id="loginScreen" style="display:none"><div class="login-wrap"><div class="login-card"><div class="login-logo"><div class="icon">🕌</div><h2>إدارة اسكان مكة المكرمة</h2><p>نموذج رصد ملاحظات مساكن الحجاج</p></div><div id="loginAlert" class="alert alert-red" style="display:none"></div><div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="example@email.com" autocomplete="email"></div><div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPass" placeholder="كلمة المرور" autocomplete="current-password"></div><button class="btn btn-primary" id="loginBtn" onclick="doLogin()">🔑 دخول</button></div></div></div>
-<div id="mainApp" style="display:none">
-  <div class="topbar"><div><h1>إدارة مساكن الحجاج</h1><small id="topUser">...</small></div><div style="display:flex;align-items:center;gap:8px"><span class="sync-dot" id="syncDot"></span><button class="icon-btn" onclick="doLogout()">خروج</button></div></div>
-  <div id="screenHome" class="screen active"><div class="content">
-    <div class="stats-grid"><div class="stat-card green"><div class="stat-val" id="stTotal">-</div><div class="stat-label">إجمالي الزيارات</div></div><div class="stat-card gold"><div class="stat-val" id="stHousing">-</div><div class="stat-label">المساكن المفحوصة</div></div><div class="stat-card blue"><div class="stat-val" id="stAvg">-</div><div class="stat-label">متوسط التقييم</div></div><div class="stat-card red"><div class="stat-val" id="stLow">-</div><div class="stat-label">تحتاج متابعة</div></div></div>
-    <div class="card"><div class="card-header">📊 أبرز البنود الإشكالية</div><div id="homeIssues"><div class="empty-state"><div class="icon">📋</div>لا توجد بيانات بعد</div></div></div>
-    <div class="card"><div class="card-header">🕐 آخر الزيارات</div><div id="homeRecent"><div class="empty-state"><div class="icon">📝</div>لا توجد زيارات بعد</div></div></div>
-  </div></div>
-  <div id="screenForm" class="screen"><div class="content">
-    <div class="card"><div class="card-header">📋 بيانات الزيارة الأساسية</div>
-      <div class="row2"><div class="form-group"><label>اسم السكن / العمارة *</label><input type="text" id="fHousing" placeholder="اسم المسكن"></div><div class="form-group"><label>اليوم</label><select id="fDay"><option value="">اختر</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option></select></div></div>
-      <div class="row2"><div class="form-group"><label>التاريخ الهجري</label><input type="text" id="fDateH" placeholder="١٤٤٦/١٢/١"></div><div class="form-group"><label>التاريخ الميلادي</label><input type="date" id="fDateM"></div></div>
-      <div class="row2"><div class="form-group"><label>وقت الزيارة</label><input type="time" id="fTime"></div><div class="form-group"><label>رقم التصريح</label><input type="text" id="fPermit" placeholder="رقم التصريح"></div></div>
-      <div class="row2"><div class="form-group"><label>موقع العمارة</label><input type="text" id="fLocation" placeholder="الحي / المنطقة"></div><div class="form-group"><label>جنسية الحجاج</label><input type="text" id="fNationality" placeholder="الجنسية"></div></div>
-      <div class="row2"><div class="form-group"><label>رقم عداد الكهرباء</label><input type="text" id="fElec" placeholder="رقم العداد"></div><div class="form-group"><label>اسم المالك</label><input type="text" id="fOwner" placeholder="اسم المالك"></div></div>
+
+<!-- APP LOADER -->
+<div id="appLoader">
+  <div class="logo">🕌</div>
+  <h2>إدارة مساكن الحجاج</h2>
+  <p>جاري الاتصال بقاعدة البيانات...</p>
+  <div class="spinner"></div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen" style="display:none">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="icon">🕌</div>
+        <h2>إدارة اسكان مكة المكرمة</h2>
+        <p>نموذج رصد ملاحظات مساكن الحجاج</p>
+      </div>
+      <div id="loginAlert" class="alert alert-red" style="display:none"></div>
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="loginEmail" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="loginPass" placeholder="كلمة المرور" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="loginBtn" onclick="doLogin()">🔑 دخول</button>
+      <div style="margin-top:16px;padding:12px;background:var(--green-light);border-radius:8px;font-size:11px;color:var(--green)">
+        <b>ملاحظة:</b> للدخول الأول استخدم الحساب الافتراضي الذي أنشأته في Firebase Authentication
+      </div>
     </div>
-    <div class="card"><div class="card-header">📊 تقدم الإجابات</div><div class="prog-wrap"><div class="prog-label"><span id="answeredCount">0 من 41 بند</span><span id="answeredPct">0%</span></div><div class="prog-bar"><div class="prog-fill green" id="answeredBar" style="width:0%"></div></div></div><div style="display:flex;gap:16px;font-size:12px"><span style="color:var(--green)">✅ نعم: <b id="yesCount">0</b></span><span style="color:var(--red)">❌ لا: <b id="noCount">0</b></span><span style="color:var(--gray-mid)">⬜ لم يجب: <b id="naCount">41</b></span></div></div>
-    <div class="section-title">✅ البنود ١ - ٢١</div><div id="items1"></div>
-    <div class="section-title">✅ البنود ٢٢ - ٤١</div><div id="items2"></div>
-    <div class="card"><div class="card-header">💬 الملاحظات</div><div class="form-group"><label>رأي الحاج</label><textarea id="fPilgrimNote" placeholder="ملاحظات الحجاج..."></textarea></div><div class="form-group"><label>ملاحظات أخرى</label><textarea id="fOtherNote" placeholder="ملاحظات إضافية..."></textarea></div></div>
-    <div class="card"><div class="card-header">✍️ التوقيعات</div><div style="background:var(--blue-light);border-radius:8px;padding:14px;margin-bottom:12px"><div class="fw700" style="color:var(--blue);margin-bottom:10px">👤 مشرف ميداني</div><div class="form-group" style="margin-bottom:0"><label>الاسم *</label><input type="text" id="fSupervisor" placeholder="اسم المشرف الميداني"></div></div><div style="background:var(--green-light);border-radius:8px;padding:14px"><div class="fw700" style="color:var(--green);margin-bottom:10px">🏢 مسؤول المبنى</div><div class="form-group" style="margin-bottom:0"><label>الاسم</label><input type="text" id="fManager" placeholder="اسم مسؤول المبنى"></div></div></div>
-    <div class="card"><div class="card-header">📸 الصور المرفقة</div><div class="photo-area" onclick="document.getElementById('photoInput').click()"><div style="font-size:32px;margin-bottom:8px">📷</div><div style="font-size:13px;color:var(--gray-mid)">اضغط لإضافة صورة</div></div><input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="addPhotos(this)"><div class="photos-row" id="photosRow"></div></div>
-    <div id="formAlert" class="alert" style="display:none"></div>
-    <button class="btn btn-primary" id="submitBtn" onclick="submitVisit()" style="margin-bottom:8px">💾 حفظ الزيارة</button>
-    <button class="btn btn-secondary" onclick="clearForm()" style="margin-bottom:14px">🗑️ مسح البيانات</button>
-  </div></div>
-  <div id="screenVisits" class="screen"><div class="content">
-    <div class="card"><div class="form-group" style="margin-bottom:8px"><input type="text" id="searchVisit" placeholder="🔍 ابحث عن مسكن أو مشرف..." oninput="filterVisits()"></div><div class="row2"><select id="filterScore" onchange="filterVisits()"><option value="">كل التقييمات</option><option value="high">ممتاز 80%+</option><option value="mid">متوسط 60-79%</option><option value="low">ضعيف أقل 60%</option></select><select id="filterSup" onchange="filterVisits()"><option value="">كل المشرفين</option></select></div></div>
-    <div id="visitsList"><div class="empty-state"><div class="icon">📋</div>لا توجد زيارات</div></div>
-  </div></div>
-  <div id="screenAnalytics" class="screen"><div class="content">
-    <div class="tabs"><button class="tab active" onclick="switchTab('tabAll',this)">📊 كل المساكن</button><button class="tab" onclick="switchTab('tabSingle',this)">🏠 مسكن محدد</button></div>
-    <div id="tabAll"><div class="card"><div class="card-header">🏆 تصنيف المساكن</div><div id="housingRank"><div class="empty-state"><div class="icon">🏆</div>لا توجد بيانات</div></div></div><div class="card"><div class="card-header">📊 نسبة الامتثال لكل بند</div><div id="itemsChart"><div class="empty-state"><div class="icon">📊</div>لا توجد بيانات</div></div></div></div>
-    <div id="tabSingle" style="display:none"><div class="card"><div class="form-group" style="margin-bottom:0"><label>اختر المسكن</label><select id="singleSelect" onchange="renderSingle()"><option value="">اختر مسكناً...</option></select></div></div><div id="singleContent"></div></div>
-  </div></div>
-  <div id="screenAdmin" class="screen"><div class="content">
-    <div class="card"><div class="card-header">👥 إدارة المستخدمين</div><div id="usersList"><div class="empty-state" style="padding:16px">جاري التحميل...</div></div><div class="divider"></div><div class="fw700" style="color:var(--green);margin-bottom:12px">➕ إضافة مستخدم جديد</div><div class="form-group"><label>الاسم الكامل</label><input type="text" id="nuName" placeholder="الاسم"></div><div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="nuEmail" placeholder="email@example.com"></div><div class="form-group"><label>كلمة المرور</label><input type="password" id="nuPass" placeholder="6 أحرف على الأقل"></div><div class="form-group"><label>الدور</label><select id="nuRole"><option value="supervisor">مشرف</option><option value="admin">مدير</option></select></div><button class="btn btn-primary" onclick="addUser()">➕ إضافة مستخدم</button></div>
-    <div class="card"><div class="card-header">📤 تصدير البيانات</div><button class="btn btn-secondary" style="margin-bottom:8px" onclick="exportCSV()">⬇️ تصدير CSV</button><button class="btn btn-secondary" onclick="exportJSON()">⬇️ تصدير JSON</button></div>
-    <div class="card"><div class="card-header" style="color:var(--red)">⚠️ منطقة الخطر</div><button class="btn btn-danger" onclick="clearAllVisits()">🗑️ مسح جميع الزيارات</button></div>
-  </div></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none">
+  <div class="topbar">
+    <div>
+      <h1>إدارة مساكن الحجاج</h1>
+      <small id="topUserName">...</small>
+    </div>
+    <div class="topbar-actions">
+      <span class="sync-dot" id="syncDot" title="حالة الاتصال"></span>
+      <button class="icon-btn" onclick="doLogout()">خروج</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="screenHome" class="screen active">
+    <div class="content">
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-val" id="stTotal">-</div><div class="stat-label">إجمالي الزيارات</div></div>
+        <div class="stat-card gold"><div class="stat-val" id="stHousing">-</div><div class="stat-label">المساكن المفحوصة</div></div>
+        <div class="stat-card blue"><div class="stat-val" id="stAvg">-</div><div class="stat-label">متوسط التقييم</div></div>
+        <div class="stat-card red"><div class="stat-val" id="stLow">-</div><div class="stat-label">تحتاج متابعة</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">📊 أبرز البنود الإشكالية</div>
+        <div id="homeIssues"><div class="empty-state"><div class="icon">📋</div>لا توجد بيانات بعد</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">🕐 آخر الزيارات</div>
+        <div id="homeRecent"><div class="empty-state"><div class="icon">📝</div>لا توجد زيارات بعد</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW VISIT FORM -->
+  <div id="screenForm" class="screen">
+    <div class="content">
+      <div class="card">
+        <div class="card-header">📋 بيانات الزيارة الأساسية</div>
+        <div class="row2">
+          <div class="form-group">
+            <label>اسم السكن / العمارة *</label>
+            <input type="text" id="fHousing" placeholder="اسم المسكن">
+          </div>
+          <div class="form-group">
+            <label>اليوم</label>
+            <select id="fDay">
+              <option value="">اختر</option>
+              <option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option>
+              <option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>التاريخ الهجري</label>
+            <input type="text" id="fDateH" placeholder="١٤٤٦/١٢/١">
+          </div>
+          <div class="form-group">
+            <label>التاريخ الميلادي</label>
+            <input type="date" id="fDateM">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>وقت الزيارة</label>
+            <input type="time" id="fTime">
+          </div>
+          <div class="form-group">
+            <label>رقم التصريح</label>
+            <input type="text" id="fPermit" placeholder="رقم التصريح">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>موقع العمارة</label>
+            <input type="text" id="fLocation" placeholder="الحي / المنطقة">
+          </div>
+          <div class="form-group">
+            <label>جنسية الحجاج</label>
+            <input type="text" id="fNationality" placeholder="الجنسية">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label>رقم عداد الكهرباء</label>
+            <input type="text" id="fElec" placeholder="رقم العداد">
+          </div>
+          <div class="form-group">
+            <label>اسم المالك</label>
+            <input type="text" id="fOwner" placeholder="اسم المالك">
+          </div>
+        </div>
+      </div>
+
+      <!-- تقدم الإجابات -->
+      <div class="card">
+        <div class="card-header">📊 تقدم الإجابات</div>
+        <div class="prog-wrap">
+          <div class="prog-label"><span id="answeredCount">0 من 41 بند</span><span id="answeredPct">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill green" id="answeredBar" style="width:0%"></div></div>
+        </div>
+        <div style="display:flex;gap:16px;font-size:12px">
+          <span style="color:var(--green)">✅ نعم: <b id="yesCount">0</b></span>
+          <span style="color:var(--red)">❌ لا: <b id="noCount">0</b></span>
+          <span style="color:var(--gray-mid)">⬜ لم يجب: <b id="naCount">41</b></span>
+        </div>
+      </div>
+
+      <div class="section-title">✅ البنود ١ - ٢١</div>
+      <div id="items1"></div>
+      <div class="section-title">✅ البنود ٢٢ - ٤١</div>
+      <div id="items2"></div>
+
+      <div class="card">
+        <div class="card-header">💬 الملاحظات</div>
+        <div class="form-group">
+          <label>رأي الحاج / ملاحظات الحجاج</label>
+          <textarea id="fPilgrimNote" placeholder="أدخل ملاحظات الحجاج..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>ملاحظات أخرى</label>
+          <textarea id="fOtherNote" placeholder="ملاحظات إضافية..."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">✍️ التوقيعات</div>
+        <div style="background:var(--blue-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px">
+          <div class="fw700" style="color:var(--blue);margin-bottom:10px">👤 مشرف ميداني</div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>الاسم *</label>
+            <input type="text" id="fSupervisor" placeholder="اسم المشرف الميداني">
+          </div>
+        </div>
+        <div style="background:var(--green-light);border-radius:var(--radius-sm);padding:14px">
+          <div class="fw700" style="color:var(--green);margin-bottom:10px">🏢 مسؤول المبنى السكني</div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>الاسم</label>
+            <input type="text" id="fManager" placeholder="اسم مسؤول المبنى">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📸 الصور المرفقة</div>
+        <div class="photo-area" onclick="document.getElementById('photoInput').click()">
+          <div style="font-size:32px;margin-bottom:8px">📷</div>
+          <div style="font-size:13px;color:var(--gray-mid)">اضغط لإضافة صورة</div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">يمكن إضافة أكثر من صورة</div>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="addPhotos(this)">
+        <div class="photos-row" id="photosRow"></div>
+      </div>
+
+      <div id="formAlert" class="alert" style="display:none"></div>
+      <button class="btn btn-primary" id="submitBtn" onclick="submitVisit()" style="margin-bottom:8px">💾 حفظ الزيارة</button>
+      <button class="btn btn-secondary" onclick="clearForm()" style="margin-bottom:14px">🗑️ مسح البيانات</button>
+    </div>
+  </div>
+
+  <!-- VISITS LIST -->
+  <div id="screenVisits" class="screen">
+    <div class="content">
+      <div class="card">
+        <div class="form-group" style="margin-bottom:8px">
+          <input type="text" id="searchVisit" placeholder="🔍 ابحث عن مسكن أو مشرف..." oninput="filterVisits()">
+        </div>
+        <div class="row2">
+          <select id="filterScore" onchange="filterVisits()" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:#fff;-webkit-appearance:none">
+            <option value="">كل التقييمات</option>
+            <option value="high">ممتاز 80%+</option>
+            <option value="mid">متوسط 60-79%</option>
+            <option value="low">ضعيف أقل 60%</option>
+          </select>
+          <select id="filterSup" onchange="filterVisits()" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:#fff;-webkit-appearance:none">
+            <option value="">كل المشرفين</option>
+          </select>
+        </div>
+      </div>
+      <div id="visitsList"><div class="empty-state"><div class="icon">📋</div>لا توجد زيارات مسجلة</div></div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div id="screenAnalytics" class="screen">
+    <div class="content">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('tabAll',this)">📊 كل المساكن</button>
+        <button class="tab" onclick="switchTab('tabSingle',this)">🏠 مسكن محدد</button>
+      </div>
+      <div id="tabAll">
+        <div class="card">
+          <div class="card-header">🏆 تصنيف المساكن</div>
+          <div id="housingRank"><div class="empty-state"><div class="icon">🏆</div>لا توجد بيانات</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">📊 نسبة الامتثال لكل بند</div>
+          <div id="itemsChart"><div class="empty-state"><div class="icon">📊</div>لا توجد بيانات</div></div>
+        </div>
+      </div>
+      <div id="tabSingle" style="display:none">
+        <div class="card">
+          <div class="form-group" style="margin-bottom:0">
+            <label>اختر المسكن</label>
+            <select id="singleSelect" onchange="renderSingle()" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:14px;background:#fff;-webkit-appearance:none">
+              <option value="">اختر مسكناً...</option>
+            </select>
+          </div>
+        </div>
+        <div id="singleContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="screenAdmin" class="screen">
+    <div class="content">
+      <div class="card">
+        <div class="card-header">👥 إدارة المستخدمين</div>
+        <div id="usersList"><div class="empty-state" style="padding:16px">جاري التحميل...</div></div>
+        <div class="divider"></div>
+        <div class="fw700" style="color:var(--green);margin-bottom:12px;font-size:14px">➕ إضافة مستخدم جديد</div>
+        <div class="form-group"><label>الاسم الكامل</label><input type="text" id="nuName" placeholder="الاسم"></div>
+        <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="nuEmail" placeholder="email@example.com"></div>
+        <div class="form-group"><label>كلمة المرور</label><input type="password" id="nuPass" placeholder="كلمة المرور (6 أحرف على الأقل)"></div>
+        <div class="form-group"><label>الدور</label>
+          <select id="nuRole" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:14px;background:#fff;-webkit-appearance:none">
+            <option value="supervisor">مشرف</option>
+            <option value="admin">مدير</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="addUser()">➕ إضافة مستخدم</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">📤 تصدير البيانات</div>
+        <button class="btn btn-secondary" style="margin-bottom:8px" onclick="exportCSV()">⬇️ تصدير CSV</button>
+        <button class="btn btn-secondary" onclick="exportJSON()">⬇️ تصدير JSON</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="color:var(--red)">⚠️ منطقة الخطر</div>
+        <p style="font-size:12px;color:var(--gray-mid);margin-bottom:12px">حذف جميع بيانات الزيارات لا يمكن التراجع عنه</p>
+        <button class="btn btn-danger" onclick="clearAllVisits()">🗑️ مسح جميع الزيارات</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="gotoScreen('screenHome',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12L12 3l9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>الرئيسية</button>
-    <button class="nav-item" onclick="gotoScreen('screenForm',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>زيارة جديدة</button>
-    <button class="nav-item" onclick="gotoScreen('screenVisits',this);renderVisits()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>السجلات</button>
-    <button class="nav-item" onclick="gotoScreen('screenAnalytics',this);renderAnalytics()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>التحليل</button>
-    <button class="nav-item" id="adminNavBtn" style="display:none" onclick="gotoScreen('screenAdmin',this);renderAdmin()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>إدارة</button>
+    <button class="nav-item active" onclick="gotoScreen('screenHome',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12L12 3l9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+      الرئيسية
+    </button>
+    <button class="nav-item" onclick="gotoScreen('screenForm',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      زيارة جديدة
+    </button>
+    <button class="nav-item" onclick="gotoScreen('screenVisits',this);renderVisits()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      السجلات
+    </button>
+    <button class="nav-item" onclick="gotoScreen('screenAnalytics',this);renderAnalytics()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      التحليل
+    </button>
+    <button class="nav-item" id="adminNavBtn" style="display:none" onclick="gotoScreen('screenAdmin',this);renderAdmin()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      إدارة
+    </button>
   </nav>
 </div>
-<script type="module">
-import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,signOut,createUserWithEmailAndPassword,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import{getFirestore,collection,addDoc,getDocs,doc,setDoc,deleteDoc,onSnapshot,query,orderBy,writeBatch,serverTimestamp,getDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import{getStorage,ref,uploadBytes,getDownloadURL}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
-const FC={apiKey:"AIzaSyDwc8B3bv-SysBcTdto3aYbh85uyLV_zMs",authDomain:"hajj-housing.firebaseapp.com",projectId:"hajj-housing",storageBucket:"hajj-housing.firebasestorage.app",messagingSenderId:"273074056326",appId:"1:273074056326:web:83f345c0274020299b3507"};
-const app=initializeApp(FC),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
-const ITEMS=[{id:1,text:'توفر تصريح'},{id:2,text:'وجود تكدس حجاج المبنى'},{id:3,text:'توفر كاميرات مراقبة للمباني التي تزيد طاقتها الاستيعابية عن (500) حاج'},{id:4,text:'وجود حارس أمن سعودي في المبنى'},{id:5,text:'توفير برادات لماء زمزم في مدخل المبنى'},{id:6,text:'التكييف والتهوية في كافة الغرف والممرات'},{id:7,text:'صلاحية دورات المياه وتوفر عبوة ثابتة لإستخدام الصابون'},{id:8,text:'توفر وسائل السلامة سطول رمل وطفايات حريق'},{id:9,text:'سخانات المياه'},{id:10,text:'شفاطات للهواء'},{id:11,text:'وجود طبق في أماكن غير مخصصة'},{id:12,text:'توفر أكواب ذات استخدام واحد'},{id:13,text:'توفر ستائر لجميع الغرف'},{id:14,text:'وجود مواد قابلة للاشتعال'},{id:15,text:'وجود قواطع خشبية بين الغرف'},{id:16,text:'توفر لوحة إرشادات السلامة لتوجيه الحجاج ولوحة بها أرقام الطوارئ والجهات المعنية بلغة مستخدمي المبنى'},{id:17,text:'أن تكون الطرق والمداخل متسعة وتسمح بمرور آليات الإطفاء والإنقاذ'},{id:18,text:'سلامة الحوائط والأسقف من الشروخ والتشققات والانتفاشات'},{id:19,text:'التأكد من توافر نوافذ سليمة وبها سك يمنع دخول الحشرات'},{id:20,text:'توفر حوض غسيل في كل مطبخ (في حال عدم وجود مطبخ مركزي)'},{id:21,text:'سلامة المصعد ووجود عقد صيانة'},{id:22,text:'وجود اقتراض بين الممرات'},{id:23,text:'استخدام الميزانين والأسطح للإسكان والتخزين'},{id:24,text:'استخدام أماكن مخصصة لسكن الحجاج وتحويلها لغرف نوم'},{id:25,text:'وجود تسرب مياه من الخزان (السفلي - العلوي)'},{id:26,text:'طبلونات أو تمديدات الكهرباء مكشوفة / الأسلاك'},{id:27,text:'توفر لوحات إرشادية مضاءة لسلامة الإخلاء وكشافات طوارئ كافية'},{id:28,text:'التأكد من تشغيل التيار في كافة عناصر المبنى'},{id:29,text:'توفر سلات مهملات في الغرف وحاويات في الممرات'},{id:30,text:'توفر غطاء محكم للخزان الأرضي'},{id:31,text:'توفر ماصق اتجاه القبلة في كل غرفة'},{id:32,text:'توفير برادات لماء عادي (تعمل)'},{id:33,text:'توفر مولد احتياطي ويعمل بكفاءة وله عقد ساري'},{id:34,text:'توفر الإضاءة الكافية في أجزاء المبنى ومرافقه'},{id:35,text:'تركيب أدوات ترشيد المياه في المطابخ ودورات المياه'},{id:36,text:'وجود سرير معدني ومخدة وخزانة ذات بابين لحفظ الملابس في كل غرفة'},{id:37,text:'وجود عوائق أمام مخارج الطوارئ'},{id:38,text:'توفر لوحة عند كل غرفة موضح عليها رقم الغرفة والعدد الإسكاني بالعربية والإنجليزية'},{id:39,text:'توفر وحدة استقبال في مدخل المبنى ويوجد بها صندوق أمانات وصندوق لحفظ المفاتيح'},{id:40,text:'توفر أغطية بألواح سليمة ومحكمة الإغلاق عليها شبك يمنع دخول الحشرات'},{id:41,text:'توفر سجاد يتناسب مع حجم الغرفة أو سجادة صلاة'}];
-let CU=null,CUD=null,AV=[],ANS={},PHOTOS=[],UNSUB=null;
-const $=id=>document.getElementById(id);
-const SS=s=>$('syncDot').className='sync-dot '+s;
-const SC=s=>s>=80?'s-good':s>=60?'s-mid':'s-bad';
-const VC=s=>s>=80?'':s>=60?'mid':'bad';
-const BC=s=>s>=80?'badge-green':s>=60?'badge-gold':'badge-red';
-const BL=s=>s>=80?'ممتاز':s>=60?'متوسط':'يحتاج متابعة';
-onAuthStateChanged(auth,async u=>{
-  $('appLoader').style.display='none';
-  if(u){
-    CU=u;
-    try{const s=await getDoc(doc(db,'users',u.uid));CUD=s.exists()?s.data():{name:u.email,role:'supervisor'};}catch(e){CUD={name:u.email,role:'supervisor'};}
-    $('loginScreen').style.display='none';$('mainApp').style.display='block';
-    $('topUser').textContent=(CUD.name||u.email)+' | '+(CUD.role==='admin'?'مدير':'مشرف');
-    if(CUD.role==='admin')$('adminNavBtn').style.display='flex';
-    initForm();startL();SS('online');
-  }else{CU=null;CUD=null;$('loginScreen').style.display='block';$('mainApp').style.display='none';if(UNSUB){UNSUB();UNSUB=null;}}
-});
-window.doLogin=async()=>{
-  const e=$('loginEmail').value.trim(),p=$('loginPass').value.trim();
-  if(!e||!p){showLE('يرجى إدخال البريد وكلمة المرور');return;}
-  $('loginBtn').disabled=true;$('loginBtn').textContent='جاري الدخول...';
-  try{await signInWithEmailAndPassword(auth,e,p);}
-  catch(er){const m={'auth/user-not-found':'البريد غير موجود','auth/wrong-password':'كلمة المرور غير صحيحة','auth/invalid-credential':'بيانات الدخول غير صحيحة','auth/invalid-email':'البريد غير صحيح'};showLE('❌ '+(m[er.code]||'خطأ في تسجيل الدخول'));$('loginBtn').disabled=false;$('loginBtn').textContent='🔑 دخول';}
-};
-window.doLogout=()=>signOut(auth);
-function showLE(m){$('loginAlert').style.display='block';$('loginAlert').textContent=m;}
-function startL(){
-  SS('syncing');
-  const q=query(collection(db,'visits'),orderBy('createdAt','desc'));
-  UNSUB=onSnapshot(q,s=>{AV=s.docs.map(d=>({id:d.id,...d.data()}));renderDB();SS('online');const a=document.querySelector('.screen.active');if(a?.id==='screenVisits')renderVisits();if(a?.id==='screenAnalytics')renderAnalytics();},()=>SS('offline'));
-}
-window.gotoScreen=(id,el)=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));if(el)el.classList.add('active');};
-window.switchTab=(id,el)=>{['tabAll','tabSingle'].forEach(t=>$(t).style.display='none');$(id).style.display='block';document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');};
-function initForm(){ANS={};ITEMS.forEach(it=>ANS[it.id]=null);const now=new Date();$('fTime').value=now.toTimeString().slice(0,5);$('fDateM').value=now.toISOString().slice(0,10);$('items1').innerHTML=ITEMS.slice(0,21).map(bR).join('');$('items2').innerHTML=ITEMS.slice(21).map(bR).join('');updP();}
-function bR(it){return`<div class="item-row" id="row_${it.id}"><div class="item-num">${it.id}</div><div class="item-text">${it.text}</div><div class="yes-no"><button class="yn-btn yes" onclick="setAns(${it.id},'yes',this)">نعم</button><button class="yn-btn no" onclick="setAns(${it.id},'no',this)">لا</button></div></div>`;}
-window.setAns=(id,v,btn)=>{ANS[id]=v;const r=$('row_'+id);r.querySelectorAll('.yn-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');r.className='item-row answered-'+v;updP();};
-function updP(){const y=Object.values(ANS).filter(v=>v==='yes').length,n=Object.values(ANS).filter(v=>v==='no').length,t=y+n,p=Math.round((t/41)*100);$('answeredCount').textContent=t+' من 41 بند';$('answeredPct').textContent=p+'%';$('answeredBar').style.width=p+'%';$('yesCount').textContent=y;$('noCount').textContent=n;$('naCount').textContent=41-t;}
-window.addPhotos=input=>{Array.from(input.files).forEach(f=>{const r=new FileReader();r.onload=e=>{PHOTOS.push(e.target.result);rendP();};r.readAsDataURL(f);});input.value='';};
-function rendP(){$('photosRow').innerHTML=PHOTOS.map((d,i)=>`<div class="photo-thumb"><img src="${d}"><button class="photo-del" onclick="removePhoto(${i})">✕</button></div>`).join('');}
-window.removePhoto=i=>{PHOTOS.splice(i,1);rendP();};
-window.submitVisit=async()=>{
-  const h=$('fHousing').value.trim(),sup=$('fSupervisor').value.trim();
-  if(!h){showFA('❌ يرجى إدخال اسم السكن','alert-red');return;}
-  if(!sup){showFA('❌ يرجى إدخال اسم المشرف','alert-red');return;}
-  $('submitBtn').disabled=true;$('submitBtn').textContent='⏳ جاري الحفظ...';
-  const y=Object.values(ANS).filter(v=>v==='yes').length,n=Object.values(ANS).filter(v=>v==='no').length,sc=Math.round((y/41)*100);
-  let pURLs=[];
-  for(let i=0;i<PHOTOS.length;i++){try{const bl=dUB(PHOTOS[i]),r=ref(storage,`visits/${Date.now()}_${i}.jpg`);await uploadBytes(r,bl);pURLs.push(await getDownloadURL(r));}catch(e){pURLs.push(PHOTOS[i]);}}
-  try{await addDoc(collection(db,'visits'),{housing:h,day:$('fDay').value,dateH:$('fDateH').value,dateM:$('fDateM').value,time:$('fTime').value,location:$('fLocation').value,permit:$('fPermit').value,elec:$('fElec').value,nationality:$('fNationality').value,owner:$('fOwner').value,supervisor:sup,manager:$('fManager').value,pilgrimNote:$('fPilgrimNote').value,otherNote:$('fOtherNote').value,answers:{...ANS},photos:pURLs,score:sc,yesCount:y,noCount:n,createdBy:CU.uid,createdByName:CUD.name||CU.email,createdAt:serverTimestamp()});showFA('✅ تم حفظ الزيارة! التقييم: '+sc+'%','alert-green');PHOTOS=[];setTimeout(()=>clearForm(),2000);}catch(e){showFA('❌ خطأ: '+e.message,'alert-red');}
-  $('submitBtn').disabled=false;$('submitBtn').textContent='💾 حفظ الزيارة';
-};
-function dUB(d){const a=d.split(','),m=a[0].match(/:(.*?);/)[1],b=atob(a[1]);let n=b.length;const u=new Uint8Array(n);while(n--)u[n]=b.charCodeAt(n);return new Blob([u],{type:m});}
-function showFA(m,c){const el=$('formAlert');el.className='alert '+c;el.textContent=m;el.style.display='block';setTimeout(()=>el.style.display='none',4000);}
-window.clearForm=()=>{['fHousing','fDay','fDateH','fDateM','fTime','fPermit','fLocation','fNationality','fElec','fOwner','fSupervisor','fManager','fPilgrimNote','fOtherNote'].forEach(id=>{const e=$(id);if(e)e.value='';});PHOTOS=[];$('photosRow').innerHTML='';$('formAlert').style.display='none';initForm();};
-function renderDB(){
-  const v=AV,hs=new Set(v.map(x=>x.housing)),av=v.length?Math.round(v.reduce((s,x)=>s+x.score,0)/v.length):0;
-  $('stTotal').textContent=v.length;$('stHousing').textContent=hs.size;$('stAvg').textContent=v.length?av+'%':'-';$('stLow').textContent=v.filter(x=>x.score<60).length;
-  if(!v.length){$('homeIssues').innerHTML='<div class="empty-state"><div class="icon">📋</div>لا توجد بيانات بعد</div>';$('homeRecent').innerHTML='<div class="empty-state"><div class="icon">📝</div>لا توجد زيارات بعد</div>';return;}
-  const st=ITEMS.map(it=>{const y=v.filter(x=>x.answers[it.id]==='yes').length,t=v.filter(x=>x.answers[it.id]!=null).length;return{id:it.id,text:it.text,pct:t>0?Math.round((y/t)*100):null};}).filter(x=>x.pct!==null).sort((a,b)=>a.pct-b.pct).slice(0,6);
-  $('homeIssues').innerHTML=st.map(it=>`<div class="prog-wrap"><div class="prog-label"><span>${it.id}. ${it.text.slice(0,32)}${it.text.length>32?'...':''}</span><span>${it.pct}%</span></div><div class="prog-bar"><div class="prog-fill ${it.pct>=80?'green':it.pct>=60?'gold':'red'}" style="width:${it.pct}%"></div></div></div>`).join('');
-  $('homeRecent').innerHTML=v.slice(0,4).map(vC).join('');
-}
-function vC(v){return`<div class="visit-item ${VC(v.score)}" onclick="showDetail('${v.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="visit-name">${v.housing}</div><div class="visit-meta">${v.dateM||''} ${v.time||''} | ${v.supervisor}</div></div><div class="visit-score ${SC(v.score)}">${v.score}%</div></div><span class="badge ${BC(v.score)}">${BL(v.score)}</span><span style="font-size:11px;color:var(--gray-mid);margin-right:8px">✅${v.yesCount} ❌${v.noCount}</span></div>`;}
-window.renderVisits=()=>{
-  let v=[...AV];const s=$('searchVisit').value.toLowerCase(),sf=$('filterScore').value,sup=$('filterSup').value;
-  if(s)v=v.filter(x=>x.housing.toLowerCase().includes(s)||x.supervisor.toLowerCase().includes(s));
-  if(sf==='high')v=v.filter(x=>x.score>=80);else if(sf==='mid')v=v.filter(x=>x.score>=60&&x.score<80);else if(sf==='low')v=v.filter(x=>x.score<60);
-  if(sup)v=v.filter(x=>x.supervisor===sup);
-  const sups=[...new Set(AV.map(x=>x.supervisor))],sel=$('filterSup'),cur=sel.value;
-  sel.innerHTML='<option value="">كل المشرفين</option>'+sups.map(s=>`<option value="${s}" ${s===cur?'selected':''}>${s}</option>`).join('');
-  $('visitsList').innerHTML=v.length?v.map(vC).join(''):'<div class="empty-state"><div class="icon">🔍</div>لا توجد نتائج</div>';
-};
-window.filterVisits=()=>renderVisits();
-window.showDetail=id=>{
-  const v=AV.find(x=>x.id===id);if(!v)return;
-  const ni=ITEMS.filter(it=>v.answers[it.id]==='no'),canD=CUD?.role==='admin';
-  const m=document.createElement('div');m.className='modal-overlay open';
-  m.innerHTML=`<div class="modal"><div class="modal-handle"></div><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div><div style="font-size:17px;font-weight:900;color:var(--green)">${v.housing}</div><div style="font-size:12px;color:var(--gray-mid)">${v.dateM||''} | ${v.time||''} | ${v.day||''}</div></div><div class="visit-score ${SC(v.score)}">${v.score}%</div></div><div class="stats-grid" style="margin-bottom:12px"><div class="stat-card green"><div class="stat-val">${v.yesCount}</div><div class="stat-label">نعم ✅</div></div><div class="stat-card red"><div class="stat-val">${v.noCount}</div><div class="stat-label">لا ❌</div></div></div><div class="divider"></div><div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:13px">❌ البنود السلبية (${ni.length})</div>${ni.map(it=>`<div style="padding:7px;background:var(--red-light);border-radius:6px;font-size:12px;margin-bottom:4px;color:var(--red)">${it.id}. ${it.text}</div>`).join('')||'<div style="font-size:12px;padding:8px;color:var(--gray-mid)">لا يوجد بنود سلبية 👍</div>'}<div class="divider"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:12px"><div><div style="color:var(--gray-mid);margin-bottom:2px">المشرف الميداني</div><div class="fw700">${v.supervisor}</div></div><div><div style="color:var(--gray-mid);margin-bottom:2px">مسؤول المبنى</div><div class="fw700">${v.manager||'-'}</div></div></div>${v.pilgrimNote?`<div class="alert alert-green" style="font-size:12px"><b>رأي الحاج:</b> ${v.pilgrimNote}</div>`:''} ${v.photos?.length?`<div class="photos-row" style="margin:10px 0">${v.photos.map(p=>`<div class="photo-thumb"><img src="${p}" onclick="window.open('${p}','_blank')"></div>`).join('')}</div>`:''}<div class="divider"></div><button class="btn btn-primary" style="margin-bottom:8px;background:#1D9E75" onclick="printReport('${v.id}')">🖨️ طباعة النموذج الرسمي</button>${canD?`<button class="btn btn-danger" style="margin-bottom:8px" onclick="deleteVisit('${v.id}',this.closest('.modal-overlay'))">🗑️ حذف الزيارة</button>`:''}<button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">إغلاق</button></div>`;
-  m.addEventListener('click',e=>{if(e.target===m)m.remove();});document.body.appendChild(m);
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+<script>
+// ===================== FIREBASE CONFIG =====================
+const firebaseConfig = {
+  apiKey: "AIzaSyDwc8B3bv-SysBcTdto3aYbh85uyLV_zMs",
+  authDomain: "hajj-housing.firebaseapp.com",
+  projectId: "hajj-housing",
+  storageBucket: "hajj-housing.firebasestorage.app",
+  messagingSenderId: "273074056326",
+  appId: "1:273074056326:web:83f345c0274020299b3507",
+  measurementId: "G-L8YB800LCB"
 };
 
-window.printReport=id=>{
-  const v=AV.find(x=>x.id===id);if(!v)return;
-  const ch=(itemId)=>{
-    const a=v.answers[itemId];
-    const yes=a==='yes'?'☑':'☐';
-    const no=a==='no'?'☑':'☐';
-    return{yes,no};
-  };
-  const rows1=ITEMS.slice(0,21).map(it=>{const c=ch(it.id);return`<tr><td class="num">${it.id}</td><td class="txt">${it.text}</td><td class="cb">${c.yes}</td><td class="cb">${c.no}</td><td class="note"></td></tr>`;}).join('');
-  const rows2=ITEMS.slice(21).map(it=>{const c=ch(it.id);return`<tr><td class="num">${it.id}</td><td class="txt">${it.text}</td><td class="cb">${c.yes}</td><td class="cb">${c.no}</td><td class="note"></td></tr>`;}).join('');
-  const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>نموذج رصد الملاحظات</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Cairo',Arial,sans-serif;font-size:11px;color:#000;background:#fff;padding:12px;direction:rtl}
-.page{max-width:210mm;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;border-bottom:2px solid #000;padding-bottom:8px}
-.header-center{text-align:center;flex:1}
-.header-center h1{font-size:18px;font-weight:900;margin:4px 0}
-.header-center h2{font-size:13px;font-weight:700;border:2px solid #000;display:inline-block;padding:3px 16px;margin-top:4px}
-.logo-box{border:1px solid #000;padding:6px;text-align:center;font-size:10px;font-weight:700;min-width:80px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;font-size:10.5px}
-.info-row{display:flex;gap:4px;border-bottom:1px solid #ccc;padding:3px 0}
-.info-label{font-weight:700;white-space:nowrap}
-.info-val{border-bottom:1px dotted #999;flex:1;min-width:60px}
-.main-table{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:10px}
-.main-table th,.main-table td{border:1px solid #000;padding:3px 5px;text-align:center;vertical-align:middle}
-.main-table th{background:#d4e6d4;font-weight:700;font-size:10px}
-.txt{text-align:right!important;font-size:10px;line-height:1.4}
-.num{width:28px;font-weight:700}
-.cb{width:30px;font-size:14px}
-.note{width:60px}
-.col-header{writing-mode:horizontal-tb}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.section-title{background:#2d7a4f;color:#fff;padding:3px 8px;font-weight:700;font-size:11px;margin-bottom:2px}
-.notes-area{border:1px solid #000;min-height:40px;padding:4px;margin-bottom:6px;font-size:10px}
-.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
-.sig-box{border:1px solid #000;padding:8px}
-.sig-title{font-weight:900;font-size:11px;text-align:center;background:#eee;margin:-8px -8px 8px;padding:4px}
-.sig-line{border-bottom:1px solid #000;margin:6px 0;height:20px}
-.score-badge{display:inline-block;padding:4px 16px;border-radius:20px;font-weight:900;font-size:13px;margin-bottom:6px}
-@media print{body{padding:6px}@page{size:A4;margin:10mm}}
-</style></head><body><div class="page">
-<div class="header">
-  <div class="logo-box">مركز<br>الضيافة</div>
-  <div class="header-center">
-    <div style="font-size:11px;color:#888">إدارة اسكان مكة المكرمة</div>
-    <h1>نموذج رصد الملاحظات على مساكن الحجاج</h1>
-    <h2>إدارة اسكان مكة المكرمة</h2>
-  </div>
-  <div class="logo-box" style="text-align:center;font-size:18px">🕌</div>
-</div>
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-<div class="info-grid">
-  <div class="info-row"><span class="info-label">اليوم:</span><span class="info-val">${v.day||''}</span><span class="info-label">التاريخ:</span><span class="info-val">${v.dateH||''} هـ / ${v.dateM||''} م</span></div>
-  <div class="info-row"><span class="info-label">وقت الزيارة:</span><span class="info-val">${v.time||''}</span><span class="info-label">رقم التصريح:</span><span class="info-val">${v.permit||''}</span></div>
-  <div class="info-row"><span class="info-label">اسم المالك:</span><span class="info-val">${v.owner||''}</span><span class="info-label">موقع العمارة:</span><span class="info-val">${v.location||''}</span></div>
-  <div class="info-row"><span class="info-label">رقم عداد الكهرباء:</span><span class="info-val">${v.elec||''}</span><span class="info-label">جنسية الحجاج:</span><span class="info-val">${v.nationality||''}</span></div>
-</div>
+// ===================== ITEMS DATA =====================
+const ITEMS = [
+  {id:1,text:'توفر تصريح'},
+  {id:2,text:'وجود تكدس حجاج المبنى'},
+  {id:3,text:'توفر كاميرات مراقبة للمباني التي تزيد طاقتها الاستيعابية عن (500) حاج'},
+  {id:4,text:'وجود حارس أمن سعودي في المبنى'},
+  {id:5,text:'توفير برادات لماء زمزم في مدخل المبنى'},
+  {id:6,text:'التكييف والتهوية في كافة الغرف والممرات'},
+  {id:7,text:'صلاحية دورات المياه وتوفر عبوة ثابتة لإستخدام الصابون'},
+  {id:8,text:'توفر وسائل السلامة سطول رمل وطفايات حريق'},
+  {id:9,text:'سخانات المياه'},
+  {id:10,text:'شفاطات للهواء'},
+  {id:11,text:'وجود طبق في أماكن غير مخصصة'},
+  {id:12,text:'توفر أكواب ذات استخدام واحد'},
+  {id:13,text:'توفر ستائر لجميع الغرف'},
+  {id:14,text:'وجود مواد قابلة للاشتعال'},
+  {id:15,text:'وجود قواطع خشبية بين الغرف'},
+  {id:16,text:'توفر لوحة إرشادات السلامة لتوجيه الحجاج ولوحة بها أرقام الطوارئ والجهات المعنية بلغة مستخدمي المبنى'},
+  {id:17,text:'أن تكون الطرق والمداخل والمقابة للمبنى متسعة وتسمح بمرور آليات الإطفاء والإنقاذ'},
+  {id:18,text:'سلامة الحوائط والأسقف من مختلف الشروخ والتشققات والانتفاشات'},
+  {id:19,text:'التأكد من توافر نوافذ سليمة وبها سك يمنع دخول الحشرات'},
+  {id:20,text:'توفر حوض غسيل في كل مطبخ من المبنى (في حال عدم وجود مطبخ مركزي)'},
+  {id:21,text:'سلامة المصعد ووجود عقد صيانة'},
+  {id:22,text:'وجود اقتراض بين الممرات'},
+  {id:23,text:'استخدام الميزانين والأسطح للإسكان والتخزين'},
+  {id:24,text:'استخدام أماكن مخصصة لسكن الحجاج وتحويلها لغرف نوم'},
+  {id:25,text:'وجود تسرب مياه من الخزان (السفلي - العلوي)'},
+  {id:26,text:'طبلونات أو تمديدات الكهرباء مكشوفة/الأسلاك'},
+  {id:27,text:'توفر لوحات إرشادية مضاءة لسلامة الإخلاء وكشافات طوارئ كافية'},
+  {id:28,text:'التأكد من تشغيل التيار في كافة عناصر المبنى'},
+  {id:29,text:'توفر سلات مهملات في الغرف وحاويات في الممرات'},
+  {id:30,text:'توفر غطاء محكم للخزان الأرضي'},
+  {id:31,text:'توفر ماصق اتجاه القبلة في كل غرفة'},
+  {id:32,text:'توفير برادات لماء عادي (تعمل)'},
+  {id:33,text:'توفر مولد احتياطي ويعمل بكفاءة وله عقد ساري'},
+  {id:34,text:'أن توفر الإضاءة الكافية في أجزاء المبنى ومرافقه'},
+  {id:35,text:'تركيب أدوات ترشيد المياه في المطابخ ودورات المياه'},
+  {id:36,text:'وجود سرير معدني ومخدة وخزانة ذات بابين لحفظ الملابس في كل غرفة'},
+  {id:37,text:'وجود عوائق أمام مخارج الطوارئ'},
+  {id:38,text:'توفر لوحة عند كل غرفة موضح عليها رقم الغرفة والعدد الإسكاني بالعربية والإنجليزية'},
+  {id:39,text:'توفر وحدة استقبال في مدخل المبنى ويوجد بها صندوق أمانات وصندوق لحفظ المفاتيح'},
+  {id:40,text:'توفر أغطية بألواح سليمة ومحكمة الإغلاق عليها شبك يمنع دخول الحشرات'},
+  {id:41,text:'توفر سجاد يتناسب مع حجم الغرفة أو سجادة صلاة'}
+];
 
-<div style="text-align:center;margin-bottom:6px">
-  <span class="score-badge" style="background:${v.score>=80?'#E1F5EE;color:#0F6E56':v.score>=60?'#FAEEDA;color:#BA7517':'#FCEBEB;color:#A32D2D'}">
-    التقييم الإجمالي: ${v.score}% | نعم: ${v.yesCount} | لا: ${v.noCount}
-  </span>
-</div>
+// ===================== STATE =====================
+let currentUser = null;
+let currentUserData = null;
+let allVisits = [];
+let answers = {};
+let photoDataURLs = [];
+let unsubscribeVisits = null;
 
-<div class="two-col">
-<div>
-<div class="section-title">البنود ١ - ٢١</div>
-<table class="main-table">
-<thead><tr><th class="num">م</th><th class="txt">الملاحظات</th><th class="cb">نعم</th><th class="cb">لا</th><th class="note">ملاحظات</th></tr></thead>
-<tbody>${rows1}</tbody>
-</table>
-</div>
-<div>
-<div class="section-title">البنود ٢٢ - ٤١</div>
-<table class="main-table">
-<thead><tr><th class="num">م</th><th class="txt">الملاحظات</th><th class="cb">نعم</th><th class="cb">لا</th><th class="note">ملاحظات</th></tr></thead>
-<tbody>${rows2}</tbody>
-</table>
-</div>
-</div>
-
-<div style="margin-top:8px">
-  <div style="font-weight:700;margin-bottom:3px;font-size:11px">رأي الحاج :</div>
-  <div class="notes-area">${v.pilgrimNote||''}</div>
-  <div style="font-weight:700;margin-bottom:3px;font-size:11px">ملاحظات أخرى :</div>
-  <div class="notes-area">${v.otherNote||''}</div>
-</div>
-
-<div class="sig-grid">
-  <div class="sig-box">
-    <div class="sig-title">مشرف ميداني</div>
-    <div style="font-size:10px">الاسـم : <span style="font-weight:700">${v.supervisor||''}</span></div>
-    <div class="sig-line"></div>
-    <div style="font-size:10px">التوقيـع : .........................</div>
-    <div style="font-size:10px;margin-top:4px">التـاريـخ : ${v.dateM||''}</div>
-  </div>
-  <div class="sig-box">
-    <div class="sig-title">مسؤول المبنى السكني (مشرف)</div>
-    <div style="font-size:10px">الاسـم : <span style="font-weight:700">${v.manager||''}</span></div>
-    <div class="sig-line"></div>
-    <div style="font-size:10px">التوقيـع : .........................</div>
-    <div style="font-size:10px;margin-top:4px">التـاريـخ : ${v.dateM||''}</div>
-  </div>
-</div>
-
-</div>
-<script>window.onload=()=>{window.print();}</script>
-</body></html>`;
-  const w=window.open('','_blank');
-  if(w){w.document.write(html);w.document.close();}
-  else{
-    const b=document.createElement('a');
-    b.href='data:text/html;charset=utf-8,'+encodeURIComponent(html);
-    b.download='تقرير-'+v.housing+'-'+v.dateM+'.html';
-    b.click();
+// ===================== AUTH =====================
+auth.onAuthStateChanged(async user => {
+  document.getElementById('appLoader').style.display = 'none';
+  if (user) {
+    currentUser = user;
+    // Load user profile from Firestore
+    try {
+      const snap = await db.collection('users').doc(user.uid).get();
+      currentUserData = snap.exists ? snap.data() : {name: user.email, role: 'supervisor'};
+    } catch(e) {
+      currentUserData = {name: user.email, role: 'supervisor'};
+    }
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('topUserName').textContent = (currentUserData.name||user.email) + ' | ' + (currentUserData.role==='admin'?'مدير':'مشرف');
+    if(currentUserData.role === 'admin') {
+      document.getElementById('adminNavBtn').style.display = 'flex';
+    }
+    initForm();
+    startListening();
+    setSyncStatus('online');
+  } else {
+    currentUser = null;
+    currentUserData = null;
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('mainApp').style.display = 'none';
+    if(unsubscribeVisits) unsubscribeVisits();
   }
-};
-window.deleteVisit=async(id,modal)=>{if(!confirm('هل تريد حذف هذه الزيارة؟'))return;try{await deleteDoc(doc(db,'visits',id));modal.remove();}catch(e){alert('خطأ: '+e.message);}};
-window.renderAnalytics=()=>{
-  const v=AV;if(!v.length)return;
-  const mp={};v.forEach(x=>{if(!mp[x.housing])mp[x.housing]={name:x.housing,scores:[],count:0};mp[x.housing].scores.push(x.score);mp[x.housing].count++;});
-  const rk=Object.values(mp).map(h=>({...h,avg:Math.round(h.scores.reduce((a,b)=>a+b,0)/h.scores.length)})).sort((a,b)=>b.avg-a.avg);
-  const md=['🥇','🥈','🥉'];
-  $('housingRank').innerHTML=rk.map((h,i)=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px;background:var(--gray-light);border-radius:8px"><div style="font-size:20px;width:28px;text-align:center">${md[i]||'#'+(i+1)}</div><div style="flex:1"><div style="font-size:13px;font-weight:700">${h.name}</div><div style="font-size:11px;color:var(--gray-mid)">${h.count} زيارة</div><div class="prog-bar" style="margin-top:5px"><div class="prog-fill ${h.avg>=80?'green':h.avg>=60?'gold':'red'}" style="width:${h.avg}%"></div></div></div><div style="font-size:18px;font-weight:900;color:${h.avg>=80?'var(--green)':h.avg>=60?'var(--gold)':'var(--red)'}">${h.avg}%</div></div>`).join('');
-  const st=ITEMS.map(it=>{const y=v.filter(x=>x.answers[it.id]==='yes').length,t=v.filter(x=>x.answers[it.id]!=null).length;return{id:it.id,text:it.text,pct:t>0?Math.round((y/t)*100):null};}).filter(x=>x.pct!==null);
-  $('itemsChart').innerHTML=st.map(it=>`<div class="chart-bar-wrap"><div class="chart-bar-label">${it.id}. ${it.text.slice(0,38)}${it.text.length>38?'...':''}</div><div class="chart-bar"><div class="chart-bar-fill" style="width:${it.pct}%;background:${it.pct>=80?'var(--green-mid)':it.pct>=60?'var(--gold-mid)':'var(--red-mid)'}"><span class="chart-bar-val">${it.pct}%</span></div></div></div>`).join('');
-  const ns=[...new Set(v.map(x=>x.housing))],sel=$('singleSelect'),cur=sel.value;
-  sel.innerHTML='<option value="">اختر مسكناً...</option>'+ns.map(n=>`<option value="${n}" ${n===cur?'selected':''}>${n}</option>`).join('');
-};
-window.renderSingle=()=>{
-  const name=$('singleSelect').value,el=$('singleContent');if(!name){el.innerHTML='';return;}
-  const v=AV.filter(x=>x.housing===name),avg=Math.round(v.reduce((s,x)=>s+x.score,0)/v.length);
-  const pr=ITEMS.map(it=>{const y=v.filter(x=>x.answers[it.id]==='yes').length,t=v.filter(x=>x.answers[it.id]!=null).length;return{id:it.id,text:it.text,pct:t>0?Math.round((y/t)*100):null};}).filter(x=>x.pct!==null&&x.pct<70).sort((a,b)=>a.pct-b.pct);
-  el.innerHTML=`<div class="card"><div class="card-header">📊 ${name}</div><div class="stats-grid"><div class="stat-card green"><div class="stat-val">${v.length}</div><div class="stat-label">زيارة</div></div><div class="stat-card blue"><div class="stat-val">${avg}%</div><div class="stat-label">متوسط</div></div></div><div style="font-size:13px;font-weight:700;margin-bottom:8px">تاريخ الزيارات</div>${v.map(x=>`<div style="display:flex;justify-content:space-between;padding:8px;background:var(--gray-light);border-radius:6px;margin-bottom:4px;font-size:12px;cursor:pointer" onclick="showDetail('${x.id}')"><span>${x.dateM||''} ${x.time||''} | ${x.supervisor}</span><span class="fw700 ${SC(x.score)}">${x.score}%</span></div>`).join('')}</div><div class="card"><div class="card-header">🔴 البنود الأكثر مشكلة</div>${pr.length?pr.map(it=>`<div class="prog-wrap"><div class="prog-label"><span>${it.id}. ${it.text.slice(0,32)}...</span><span>${it.pct}%</span></div><div class="prog-bar"><div class="prog-fill red" style="width:${it.pct}%"></div></div></div>`).join(''):'<div class="empty-state" style="padding:14px">لا توجد بنود إشكالية 👍</div>'}</div>`;
-};
-window.renderAdmin=async()=>{
-  try{const s=await getDocs(collection(db,'users')),us=s.docs.map(d=>({id:d.id,...d.data()}));$('usersList').innerHTML=us.map(u=>`<div class="user-row"><div class="user-avatar" style="background:${u.role==='admin'?'var(--green-light)':'var(--blue-light)'};color:${u.role==='admin'?'var(--green)':'var(--blue)'}">${(u.name||'؟')[0]}</div><div style="flex:1"><div class="fw700" style="font-size:13px">${u.name||'-'}</div><div style="font-size:11px;color:var(--gray-mid)">${u.email||''} | ${u.role==='admin'?'مدير':'مشرف'}</div></div>${u.id!==CU.uid?`<button onclick="deleteUser('${u.id}')" style="background:var(--red-light);color:var(--red);border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:var(--font)">حذف</button>`:'<span class="badge badge-green">أنت</span>'}</div>`).join('')||'<div class="empty-state" style="padding:16px">لا يوجد مستخدمون</div>';}catch(e){$('usersList').innerHTML='<div class="alert alert-red">خطأ: '+e.message+'</div>';}
-};
-window.addUser=async()=>{
-  const n=$('nuName').value.trim(),e=$('nuEmail').value.trim(),p=$('nuPass').value.trim(),r=$('nuRole').value;
-  if(!n||!e||!p){alert('يرجى ملء جميع الحقول');return;}if(p.length<6){alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');return;}
-  try{const c=await createUserWithEmailAndPassword(auth,e,p);await setDoc(doc(db,'users',c.user.uid),{name:n,email:e,role:r,createdAt:serverTimestamp()});['nuName','nuEmail','nuPass'].forEach(id=>$(id).value='');alert('✅ تم إضافة المستخدم: '+n);}catch(er){alert('❌ خطأ: '+er.message);}
-};
-window.deleteUser=async id=>{if(!confirm('هل تريد حذف هذا المستخدم؟'))return;try{await deleteDoc(doc(db,'users',id));renderAdmin();}catch(e){alert('خطأ: '+e.message);}};
-window.exportCSV=()=>{const rows=[['رقم','المسكن','التاريخ','الوقت','اليوم','الموقع','المشرف','مسؤول المبنى','الجنسية','التقييم','نعم','لا']];AV.forEach((v,i)=>rows.push([i+1,v.housing,v.dateM,v.time,v.day,v.location,v.supervisor,v.manager,v.nationality,v.score+'%',v.yesCount,v.noCount]));const csv=rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='visits.csv';a.click();};
-window.exportJSON=()=>{const a=document.createElement('a');a.href='data:text/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(AV,null,2));a.download='visits.json';a.click();};
-window.clearAllVisits=async()=>{if(!confirm('تحذير! سيتم حذف جميع الزيارات نهائياً. هل أنت متأكد؟'))return;const s=await getDocs(collection(db,'visits')),b=writeBatch(db);s.docs.forEach(d=>b.delete(d.ref));await b.commit();alert('تم مسح جميع الزيارات');};
-window.addEventListener('online',()=>SS('online'));window.addEventListener('offline',()=>SS('offline'));
+});
+
+function setSyncStatus(status) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot ' + status;
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const btn = document.getElementById('loginBtn');
+  if(!email || !pass) { showLoginAlert('يرجى إدخال البريد الإلكتروني وكلمة المرور'); return; }
+  btn.disabled = true;
+  btn.textContent = 'جاري الدخول...';
+  try {
+    await auth.signInWithEmailAndPassword(email, pass);
+  } catch(e) {
+    let msg = 'خطأ في تسجيل الدخول';
+    if(e.code === 'auth/user-not-found') msg = 'البريد الإلكتروني غير موجود';
+    else if(e.code === 'auth/wrong-password') msg = 'كلمة المرور غير صحيحة';
+    else if(e.code === 'auth/invalid-email') msg = 'البريد الإلكتروني غير صحيح';
+    else if(e.code === 'auth/invalid-credential') msg = 'بيانات الدخول غير صحيحة';
+    showLoginAlert('❌ ' + msg);
+    btn.disabled = false;
+    btn.textContent = '🔑 دخول';
+  }
+}
+
+function showLoginAlert(msg) {
+  const el = document.getElementById('loginAlert');
+  el.style.display = 'block';
+  el.textContent = msg;
+}
+
+function doLogout() {
+  auth.signOut();
+}
+
+// ===================== REAL-TIME LISTENER =====================
+function startListening() {
+  if(unsubscribeVisits) unsubscribeVisits();
+  setSyncStatus('syncing');
+  unsubscribeVisits = db.collection('visits').orderBy('createdAt','desc').onSnapshot(snap => {
+    allVisits = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    renderDashboard();
+    setSyncStatus('online');
+    // Refresh active screen
+    const active = document.querySelector('.screen.active');
+    if(active) {
+      if(active.id === 'screenVisits') renderVisits();
+      if(active.id === 'screenAnalytics') renderAnalytics();
+    }
+  }, err => {
+    setSyncStatus('offline');
+    console.error(err);
+  });
+}
+
+// ===================== NAVIGATION =====================
+function gotoScreen(id, el) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+function switchTab(id, el) {
+  ['tabAll','tabSingle'].forEach(t => document.getElementById(t).style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===================== FORM =====================
+function initForm() {
+  answers = {};
+  ITEMS.forEach(it => answers[it.id] = null);
+  const now = new Date();
+  document.getElementById('fTime').value = now.toTimeString().slice(0,5);
+  document.getElementById('fDateM').value = now.toISOString().slice(0,10);
+  document.getElementById('items1').innerHTML = ITEMS.slice(0,21).map(buildRow).join('');
+  document.getElementById('items2').innerHTML = ITEMS.slice(21).map(buildRow).join('');
+  updateProgress();
+}
+
+function buildRow(item) {
+  return `<div class="item-row" id="row_${item.id}">
+    <div class="item-num">${item.id}</div>
+    <div class="item-text">${item.text}</div>
+    <div class="yes-no">
+      <button class="yn-btn yes" onclick="setAns(${item.id},'yes',this)">نعم</button>
+      <button class="yn-btn no" onclick="setAns(${item.id},'no',this)">لا</button>
+    </div>
+  </div>`;
+}
+
+function setAns(id, val, btn) {
+  answers[id] = val;
+  const row = document.getElementById('row_'+id);
+  row.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  row.className = 'item-row answered-' + val;
+  updateProgress();
+}
+
+function updateProgress() {
+  const yes = Object.values(answers).filter(v => v==='yes').length;
+  const no = Object.values(answers).filter(v => v==='no').length;
+  const total = yes + no;
+  const pct = Math.round((total/41)*100);
+  document.getElementById('answeredCount').textContent = total + ' من 41 بند';
+  document.getElementById('answeredPct').textContent = pct + '%';
+  document.getElementById('answeredBar').style.width = pct + '%';
+  document.getElementById('yesCount').textContent = yes;
+  document.getElementById('noCount').textContent = no;
+  document.getElementById('naCount').textContent = 41 - total;
+}
+
+// ===================== PHOTOS =====================
+function addPhotos(input) {
+  Array.from(input.files).forEach(f => {
+    const r = new FileReader();
+    r.onload = e => { photoDataURLs.push(e.target.result); renderPhotos(); };
+    r.readAsDataURL(f);
+  });
+  input.value = '';
+}
+function renderPhotos() {
+  document.getElementById('photosRow').innerHTML = photoDataURLs.map((d,i) => `
+    <div class="photo-thumb">
+      <img src="${d}">
+      <button class="photo-del" onclick="removePhoto(${i})">✕</button>
+    </div>`).join('');
+}
+function removePhoto(i) { photoDataURLs.splice(i,1); renderPhotos(); }
+
+// ===================== SUBMIT =====================
+async function submitVisit() {
+  const housing = document.getElementById('fHousing').value.trim();
+  const supervisor = document.getElementById('fSupervisor').value.trim();
+  if(!housing) { showFormAlert('❌ يرجى إدخال اسم السكن','alert-red'); return; }
+  if(!supervisor) { showFormAlert('❌ يرجى إدخال اسم المشرف الميداني','alert-red'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = '⏳ جاري الحفظ...';
+
+  const yes = Object.values(answers).filter(v=>v==='yes').length;
+  const no = Object.values(answers).filter(v=>v==='no').length;
+  const score = Math.round((yes/41)*100);
+
+  // Upload photos to Firebase Storage
+  let photoURLs = [];
+  try {
+    for(let i=0; i<photoDataURLs.length; i++) {
+      const blob = dataURLtoBlob(photoDataURLs[i]);
+      const ref = storage.ref(`visits/${Date.now()}_${i}.jpg`);
+      await ref.put(blob);
+      const url = await ref.getDownloadURL();
+      photoURLs.push(url);
+    }
+  } catch(e) {
+    photoURLs = photoDataURLs; // fallback: keep base64 if storage fails
+  }
+
+  const visit = {
+    housing,
+    day: document.getElementById('fDay').value,
+    dateH: document.getElementById('fDateH').value,
+    dateM: document.getElementById('fDateM').value,
+    time: document.getElementById('fTime').value,
+    location: document.getElementById('fLocation').value,
+    permit: document.getElementById('fPermit').value,
+    elec: document.getElementById('fElec').value,
+    nationality: document.getElementById('fNationality').value,
+    owner: document.getElementById('fOwner').value,
+    supervisor,
+    manager: document.getElementById('fManager').value,
+    pilgrimNote: document.getElementById('fPilgrimNote').value,
+    otherNote: document.getElementById('fOtherNote').value,
+    answers: {...answers},
+    photos: photoURLs,
+    score, yesCount: yes, noCount: no,
+    createdBy: currentUser.uid,
+    createdByName: currentUserData.name || currentUser.email,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    await db.collection('visits').add(visit);
+    showFormAlert('✅ تم حفظ الزيارة بنجاح! التقييم: '+score+'%','alert-green');
+    photoDataURLs = [];
+    setTimeout(() => { clearForm(); }, 2000);
+  } catch(e) {
+    showFormAlert('❌ خطأ في الحفظ: '+e.message,'alert-red');
+  }
+  btn.disabled = false; btn.textContent = '💾 حفظ الزيارة';
+}
+
+function dataURLtoBlob(dataURL) {
+  const arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]); let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while(n--) u8arr[n] = bstr.charCodeAt(n);
+  return new Blob([u8arr], {type:mime});
+}
+
+function showFormAlert(msg, cls) {
+  const el = document.getElementById('formAlert');
+  el.className = 'alert ' + cls; el.textContent = msg; el.style.display = 'block';
+  setTimeout(() => el.style.display='none', 4000);
+}
+
+function clearForm() {
+  ['fHousing','fDay','fDateH','fDateM','fTime','fLocation','fPermit','fElec','fNationality','fOwner','fSupervisor','fManager','fPilgrimNote','fOtherNote'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  photoDataURLs = []; document.getElementById('photosRow').innerHTML = '';
+  document.getElementById('formAlert').style.display = 'none';
+  initForm();
+}
+
+// ===================== DASHBOARD =====================
+function renderDashboard() {
+  const visits = allVisits;
+  const housing = new Set(visits.map(v=>v.housing));
+  const avg = visits.length ? Math.round(visits.reduce((s,v)=>s+v.score,0)/visits.length) : 0;
+  const low = visits.filter(v=>v.score<60).length;
+
+  document.getElementById('stTotal').textContent = visits.length;
+  document.getElementById('stHousing').textContent = housing.size;
+  document.getElementById('stAvg').textContent = visits.length ? avg+'%' : '-';
+  document.getElementById('stLow').textContent = low;
+
+  const issuesDiv = document.getElementById('homeIssues');
+  if(!visits.length) { issuesDiv.innerHTML='<div class="empty-state"><div class="icon">📋</div>لا توجد بيانات بعد</div>'; }
+  else {
+    const stats = ITEMS.map(item => {
+      const yes = visits.filter(v=>v.answers[item.id]==='yes').length;
+      const tot = visits.filter(v=>v.answers[item.id]!=null).length;
+      return {id:item.id, text:item.text, pct: tot>0?Math.round((yes/tot)*100):null, tot};
+    }).filter(x=>x.pct!==null).sort((a,b)=>a.pct-b.pct).slice(0,6);
+    issuesDiv.innerHTML = stats.map(it=>`
+      <div class="prog-wrap">
+        <div class="prog-label">
+          <span>${it.id}. ${it.text.slice(0,32)}${it.text.length>32?'...':''}</span>
+          <span>${it.pct}%</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill ${it.pct>=80?'green':it.pct>=60?'gold':'red'}" style="width:${it.pct}%"></div></div>
+      </div>`).join('');
+  }
+
+  const recentDiv = document.getElementById('homeRecent');
+  recentDiv.innerHTML = visits.length ? visits.slice(0,4).map(visitCard).join('') : '<div class="empty-state"><div class="icon">📝</div>لا توجد زيارات بعد</div>';
+}
+
+function visitCard(v) {
+  const cls = v.score>=80?'good':v.score>=60?'mid':'bad';
+  const scoreCls = v.score>=80?'score-good':v.score>=60?'score-mid':'score-bad';
+  const badgeCls = v.score>=80?'badge-green':v.score>=60?'badge-gold':'badge-red';
+  const label = v.score>=80?'ممتاز':v.score>=60?'متوسط':'يحتاج متابعة';
+  return `<div class="visit-item ${cls}" onclick="showDetail('${v.id}')">
+    <div class="visit-header">
+      <div>
+        <div class="visit-name">${v.housing}</div>
+        <div class="visit-meta">${v.dateM||''} ${v.time||''} | ${v.supervisor}</div>
+      </div>
+      <div class="visit-score ${scoreCls}">${v.score}%</div>
+    </div>
+    <span class="badge ${badgeCls}">${label}</span>
+    <span style="font-size:11px;color:var(--gray-mid);margin-right:8px">✅${v.yesCount} ❌${v.noCount}</span>
+  </div>`;
+}
+
+// ===================== VISITS LIST =====================
+function renderVisits() {
+  let visits = [...allVisits];
+  const search = document.getElementById('searchVisit').value.toLowerCase();
+  const scoreF = document.getElementById('filterScore').value;
+  const supF = document.getElementById('filterSup').value;
+
+  if(search) visits = visits.filter(v => v.housing.toLowerCase().includes(search)||v.supervisor.toLowerCase().includes(search));
+  if(scoreF==='high') visits = visits.filter(v=>v.score>=80);
+  else if(scoreF==='mid') visits = visits.filter(v=>v.score>=60&&v.score<80);
+  else if(scoreF==='low') visits = visits.filter(v=>v.score<60);
+  if(supF) visits = visits.filter(v=>v.supervisor===supF);
+
+  const sups = [...new Set(allVisits.map(v=>v.supervisor))];
+  const sel = document.getElementById('filterSup');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">كل المشرفين</option>' + sups.map(s=>`<option value="${s}" ${s===cur?'selected':''}>${s}</option>`).join('');
+
+  document.getElementById('visitsList').innerHTML = visits.length ? visits.map(visitCard).join('') : '<div class="empty-state"><div class="icon">🔍</div>لا توجد نتائج</div>';
+}
+function filterVisits() { renderVisits(); }
+
+// ===================== DETAIL MODAL =====================
+function showDetail(id) {
+  const v = allVisits.find(x=>x.id===id);
+  if(!v) return;
+  const noItems = ITEMS.filter(it=>v.answers[it.id]==='no');
+  const canDelete = currentUserData && currentUserData.role === 'admin';
+
+  const m = document.createElement('div');
+  m.className = 'modal-overlay open';
+  m.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <div class="modal-title">${v.housing}</div>
+        <div style="font-size:12px;color:var(--gray-mid)">${v.dateM||''} | ${v.time||''} | ${v.day||''}</div>
+      </div>
+      <div class="visit-score ${v.score>=80?'score-good':v.score>=60?'score-mid':'score-bad'}">${v.score}%</div>
+    </div>
+    <div class="stats-grid" style="margin-bottom:12px">
+      <div class="stat-card green"><div class="stat-val">${v.yesCount}</div><div class="stat-label">نعم ✅</div></div>
+      <div class="stat-card red"><div class="stat-val">${v.noCount}</div><div class="stat-label">لا ❌</div></div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-weight:700;color:var(--red);margin-bottom:8px;font-size:13px">❌ البنود السلبية (${noItems.length})</div>
+    ${noItems.map(it=>`<div style="padding:7px;background:var(--red-light);border-radius:6px;font-size:12px;margin-bottom:4px;color:var(--red)">${it.id}. ${it.text}</div>`).join('')||'<div class="text-muted" style="font-size:12px;padding:8px">لا يوجد بنود سلبية</div>'}
+    <div class="divider"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:12px">
+      <div><div style="color:var(--gray-mid);margin-bottom:2px">المشرف الميداني</div><div class="fw700">${v.supervisor}</div></div>
+      <div><div style="color:var(--gray-mid);margin-bottom:2px">مسؤول المبنى</div><div class="fw700">${v.manager||'-'}</div></div>
+      ${v.location?`<div><div style="color:var(--gray-mid);margin-bottom:2px">الموقع</div><div>${v.location}</div></div>`:''}
+      ${v.nationality?`<div><div style="color:var(--gray-mid);margin-bottom:2px">الجنسية</div><div>${v.nationality}</div></div>`:''}
+    </div>
+    ${v.pilgrimNote?`<div class="alert alert-green" style="font-size:12px;margin-bottom:8px"><b>رأي الحاج:</b> ${v.pilgrimNote}</div>`:''}
+    ${v.otherNote?`<div class="alert alert-gold" style="font-size:12px;margin-bottom:8px"><b>ملاحظات:</b> ${v.otherNote}</div>`:''}
+    ${v.photos&&v.photos.length?`<div class="photos-row" style="margin-bottom:12px">${v.photos.map(p=>`<div class="photo-thumb"><img src="${p}" onclick="window.open('${p}','_blank')"></div>`).join('')}</div>`:''}
+    <div class="divider"></div>
+    ${canDelete?`<button class="btn btn-danger" style="margin-bottom:8px" onclick="deleteVisit('${v.id}',this.closest('.modal-overlay'))">🗑️ حذف الزيارة</button>`:''}
+    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">إغلاق</button>
+  </div>`;
+  m.addEventListener('click', e => { if(e.target===m) m.remove(); });
+  document.body.appendChild(m);
+}
+
+async function deleteVisit(id, modal) {
+  if(!confirm('هل تريد حذف هذه الزيارة؟')) return;
+  try {
+    await db.collection('visits').doc(id).delete();
+    modal.remove();
+  } catch(e) { alert('خطأ في الحذف: '+e.message); }
+}
+
+// ===================== ANALYTICS =====================
+function renderAnalytics() {
+  const visits = allVisits;
+  if(!visits.length) return;
+
+  // Housing ranking
+  const map = {};
+  visits.forEach(v => {
+    if(!map[v.housing]) map[v.housing] = {name:v.housing, scores:[], count:0};
+    map[v.housing].scores.push(v.score); map[v.housing].count++;
+  });
+  const ranked = Object.values(map).map(h=>({...h, avg:Math.round(h.scores.reduce((a,b)=>a+b,0)/h.scores.length)})).sort((a,b)=>b.avg-a.avg);
+  const medals = ['🥇','🥈','🥉'];
+
+  document.getElementById('housingRank').innerHTML = ranked.map((h,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px;background:var(--gray-light);border-radius:8px">
+      <div style="font-size:20px;width:28px;text-align:center">${medals[i]||'#'+(i+1)}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700">${h.name}</div>
+        <div style="font-size:11px;color:var(--gray-mid)">${h.count} زيارة</div>
+        <div class="prog-bar" style="margin-top:5px"><div class="prog-fill ${h.avg>=80?'green':h.avg>=60?'gold':'red'}" style="width:${h.avg}%"></div></div>
+      </div>
+      <div style="font-size:18px;font-weight:900;color:${h.avg>=80?'var(--green)':h.avg>=60?'var(--gold)':'var(--red)'}">${h.avg}%</div>
+    </div>`).join('');
+
+  // Items compliance chart
+  const stats = ITEMS.map(item => {
+    const yes = visits.filter(v=>v.answers[item.id]==='yes').length;
+    const tot = visits.filter(v=>v.answers[item.id]!=null).length;
+    return {id:item.id, text:item.text, pct:tot>0?Math.round((yes/tot)*100):null};
+  }).filter(x=>x.pct!==null);
+
+  document.getElementById('itemsChart').innerHTML = stats.map(it=>`
+    <div class="chart-bar-wrap">
+      <div class="chart-bar-label">${it.id}. ${it.text.slice(0,38)}${it.text.length>38?'...':''}</div>
+      <div class="chart-bar">
+        <div class="chart-bar-fill" style="width:${it.pct}%;background:${it.pct>=80?'var(--green-mid)':it.pct>=60?'var(--gold-mid)':'var(--red-mid)'}">
+          <span class="chart-bar-val">${it.pct}%</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Single select
+  const sel = document.getElementById('singleSelect');
+  const names = [...new Set(visits.map(v=>v.housing))];
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">اختر مسكناً...</option>' + names.map(n=>`<option value="${n}" ${n===cur?'selected':''}>${n}</option>`).join('');
+}
+
+function renderSingle() {
+  const name = document.getElementById('singleSelect').value;
+  const el = document.getElementById('singleContent');
+  if(!name) { el.innerHTML=''; return; }
+  const visits = allVisits.filter(v=>v.housing===name);
+  const avg = Math.round(visits.reduce((s,v)=>s+v.score,0)/visits.length);
+
+  const problemItems = ITEMS.map(item => {
+    const yes = visits.filter(v=>v.answers[item.id]==='yes').length;
+    const tot = visits.filter(v=>v.answers[item.id]!=null).length;
+    return {id:item.id, text:item.text, pct:tot>0?Math.round((yes/tot)*100):null};
+  }).filter(x=>x.pct!==null&&x.pct<70).sort((a,b)=>a.pct-b.pct);
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-header">📊 ${name}</div>
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-val">${visits.length}</div><div class="stat-label">زيارة</div></div>
+        <div class="stat-card blue"><div class="stat-val">${avg}%</div><div class="stat-label">متوسط</div></div>
+      </div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px">تاريخ الزيارات</div>
+      ${visits.map(v=>`<div style="display:flex;justify-content:space-between;padding:8px;background:var(--gray-light);border-radius:6px;margin-bottom:4px;font-size:12px;cursor:pointer" onclick="showDetail('${v.id}')">
+        <span>${v.dateM||''} ${v.time||''} | ${v.supervisor}</span>
+        <span class="fw700 ${v.score>=80?'score-good':v.score>=60?'score-mid':'score-bad'}">${v.score}%</span>
+      </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header">🔴 البنود الأكثر مشكلة</div>
+      ${problemItems.length ? problemItems.map(it=>`
+        <div class="prog-wrap">
+          <div class="prog-label"><span>${it.id}. ${it.text.slice(0,32)}...</span><span>${it.pct}%</span></div>
+          <div class="prog-bar"><div class="prog-fill red" style="width:${it.pct}%"></div></div>
+        </div>`).join('') : '<div class="empty-state" style="padding:14px">لا توجد بنود إشكالية 👍</div>'}
+    </div>`;
+}
+
+// ===================== ADMIN =====================
+async function renderAdmin() {
+  try {
+    const snap = await db.collection('users').get();
+    const users = snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('usersList').innerHTML = users.map(u=>`
+      <div class="user-row">
+        <div class="user-avatar" style="background:${u.role==='admin'?'var(--green-light)':'var(--blue-light)'};color:${u.role==='admin'?'var(--green)':'var(--blue)'}">${(u.name||'؟')[0]}</div>
+        <div style="flex:1">
+          <div class="fw700" style="font-size:13px">${u.name||'بدون اسم'}</div>
+          <div style="font-size:11px;color:var(--gray-mid)">${u.email||''} | ${u.role==='admin'?'مدير':'مشرف'}</div>
+        </div>
+        ${u.id!==currentUser.uid?`<button onclick="deleteUser('${u.id}')" style="background:var(--red-light);color:var(--red);border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:var(--font)">حذف</button>`:'<span class="badge badge-green">أنت</span>'}
+      </div>`).join('') || '<div class="empty-state" style="padding:16px">لا يوجد مستخدمون</div>';
+  } catch(e) {
+    document.getElementById('usersList').innerHTML = '<div class="alert alert-red">خطأ في تحميل المستخدمين</div>';
+  }
+}
+
+async function addUser() {
+  const name = document.getElementById('nuName').value.trim();
+  const email = document.getElementById('nuEmail').value.trim();
+  const pass = document.getElementById('nuPass').value.trim();
+  const role = document.getElementById('nuRole').value;
+  if(!name||!email||!pass) { alert('يرجى ملء جميع الحقول'); return; }
+  if(pass.length<6) { alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
+  try {
+    // Create in Firebase Auth
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    // Save profile in Firestore
+    await db.collection('users').doc(cred.user.uid).set({name, email, role, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+    // Re-login current user (creating new user logs us out)
+    // Save current credentials first - note: in production use Admin SDK server-side
+    ['nuName','nuEmail','nuPass'].forEach(id=>document.getElementById(id).value='');
+    alert('✅ تم إضافة المستخدم: '+name);
+    renderAdmin();
+  } catch(e) {
+    alert('❌ خطأ: '+e.message);
+  }
+}
+
+async function deleteUser(id) {
+  if(!confirm('هل تريد حذف هذا المستخدم؟')) return;
+  try {
+    await db.collection('users').doc(id).delete();
+    renderAdmin();
+  } catch(e) { alert('خطأ: '+e.message); }
+}
+
+// ===================== EXPORT =====================
+function exportCSV() {
+  const rows = [['رقم','المسكن','التاريخ','الوقت','اليوم','الموقع','المشرف','مسؤول المبنى','الجنسية','التقييم','نعم','لا','رأي الحاج']];
+  allVisits.forEach((v,i)=>rows.push([i+1,v.housing,v.dateM,v.time,v.day,v.location,v.supervisor,v.manager,v.nationality,v.score+'%',v.yesCount,v.noCount,v.pilgrimNote]));
+  const csv = rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  download('visits.csv','data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv));
+}
+function exportJSON() { download('visits.json','data:text/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(allVisits,null,2))); }
+function download(name,data) { const a=document.createElement('a');a.href=data;a.download=name;a.click(); }
+
+async function clearAllVisits() {
+  if(!confirm('تحذير! سيتم حذف جميع الزيارات نهائياً. هل أنت متأكد؟')) return;
+  const snap = await db.collection('visits').get();
+  const batch = db.batch();
+  snap.docs.forEach(d=>batch.delete(d.ref));
+  await batch.commit();
+  alert('تم مسح جميع الزيارات');
+}
+
+// ===================== OFFLINE =====================
+window.addEventListener('online', ()=>setSyncStatus('online'));
+window.addEventListener('offline', ()=>setSyncStatus('offline'));
 </script>
 </body>
 </html>
